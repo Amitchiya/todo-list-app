@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List with Reminders</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2C3E50; /* Dark Blue Background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: #34495E; /* Darker Blue Background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            color: white;
+        }
+        h1 {
+            color: #ECF0F1;
+        }
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #BDC3C7;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 16px;
+            background: #ECF0F1;
+            color: #2C3E50;
+        }
+        button {
+            padding: 10px;
+            background: #1ABC9C;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #16A085;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        li {
+            background: #27AE60; /* Green Background for Tasks */
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            word-break: break-word;
+            color: white;
+        }
+        .delete-btn {
+            background: #E74C3C;
+            padding: 5px 10px;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .delete-btn:hover {
+            background: #C0392B;
+        }
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 15px;
+            }
+            input, button {
+                font-size: 14px;
+            }
+            li {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <div class="input-section">
+            <input type="text" id="taskInput" placeholder="Add a new task...">
+            <input type="datetime-local" id="taskDeadline">
+            <button id="addTaskButton">Add Task</button>
+        </div>
+        <ul id="taskList"></ul>
+    </div>
+    <script>
+        function addTask() {
+            const taskInput = document.getElementById("taskInput");
+            const taskDeadline = document.getElementById("taskDeadline");
+            const taskList = document.getElementById("taskList");
+            
+            if (taskInput.value.trim() === "") {
+                alert("Please enter a task!");
+                return;
+            }
+            
+            const listItem = document.createElement("li");
+            listItem.innerHTML = `<span><strong>${taskInput.value}</strong> - ${taskDeadline.value}</span> 
+                <button class="delete-btn" onclick="this.parentElement.remove()">Delete</button>`;
+            
+            taskList.appendChild(listItem);
+            
+            setReminder(taskInput.value, taskDeadline.value);
+            
+            taskInput.value = "";
+            taskDeadline.value = "";
+        }
+        
+        function setReminder(task, deadline) {
+            const deadlineTime = new Date(deadline).getTime();
+            const reminderTime = deadlineTime - (5 * 60 * 1000); // 5 minutes before deadline
+            const currentTime = new Date().getTime();
+            
+            if (reminderTime > currentTime) {
+                setTimeout(() => {
+                    alert(`Reminder: "${task}" is due in 5 minutes!`);
+                }, reminderTime - currentTime);
+            }
+        }
+        
+        document.getElementById("addTaskButton").addEventListener("click", addTask);
+    </script>
+</body>
+</html>
